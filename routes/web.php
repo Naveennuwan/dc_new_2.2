@@ -192,6 +192,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/drug-invoice/{id}', [ReciptController::class, 'DrugRecipt']);
     Route::get('/treatement-invoice/{id}', [ReciptController::class, 'TreatementInvoice']);
+    Route::get('/treatement-drug-invoice/{id}', [ReciptController::class, 'TreatementDrugRecipt']);
     
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/daily', [ReportController::class, 'daily'])->name('reports.daily');

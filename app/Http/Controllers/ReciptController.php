@@ -44,6 +44,22 @@ class ReciptController extends Controller
         ])->deleteFileAfterSend(true);
     }
 
+    public function TreatementDrugRecipt($patientId)
+    {
+        $export_path = public_path("pdf_export");
+        $fileName = "Treatement_And_Drug_Invoice" . $patientId . ".pdf";
+        $filePath = $export_path . DIRECTORY_SEPARATOR . $fileName;
+
+        $invoice = new Exports();
+
+        $invoice->TreatementAndDrugInvoice($patientId);
+
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$fileName.'"'
+        ])->deleteFileAfterSend(true);
+    }
+
     public function AdvanceInvoice($patientId)
     {
         $export_path = public_path("pdf_export");

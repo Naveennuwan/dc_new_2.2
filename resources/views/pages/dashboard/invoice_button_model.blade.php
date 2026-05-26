@@ -17,15 +17,15 @@
                         class="modern-btn btn-lime">Treatement Invoice</button>
                 </div>
             </div>
-            <!-- <div style="display: flex; justify-content: center; align-Items:center; gap: 10px; margin-Top: 10px">
+            <div style="display: flex; justify-content: center; align-Items:center; gap: 10px; margin-Top: 10px">
                 <div class="btn-group" role="group">
                     <button 
-                    id="invoice-issue-btn" 
+                    id="treatement-drug-issue-btn" 
                         style="width: 230px; height: 40px; font-size: 1rem;" 
-                        class="modern-btn btn-lime">Invoice Copy</button>
+                        class="modern-btn btn-lime">Treatement And Drug Invoice</button>
                 </div>
             </div>
-            <div style="display: flex; justify-content: center; align-Items:center; gap: 10px; margin-Top: 10px;">
+            <!-- <div style="display: flex; justify-content: center; align-Items:center; gap: 10px; margin-Top: 10px;">
                 <div class="btn-group" role="group">
                     <button 
                     id="invoice-for-today-btn" 
@@ -62,6 +62,15 @@ $('#drug-issue-btn').click(function () {
     const patientId = $('#patient_id').val();
     if (patientId) {
         window.open(`/drug-invoice/${patientId}`, '_blank');
+    } else {
+        alert('Select a patient first');
+    }
+});
+
+$('#treatement-drug-issue-btn').click(function () {
+    const patientId = $('#patient_id').val();
+    if (patientId) {
+        window.open(`/treatement-drug-invoice/${patientId}`, '_blank');
     } else {
         alert('Select a patient first');
     }

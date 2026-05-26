@@ -16,10 +16,10 @@ class LeaveRequestDataLayer
 
     public function getAllActive()
     {
-        return LeaveRequest::where('isDisplay', true)
+        return LeaveRequest::where('isDisplay', false)
         ->orderBy('id', 'DESC')
         ->get()
-        ->isEmpty() ? [] : LeaveRequest::where('isDisplay', true)
+        ->isEmpty() ? [] : LeaveRequest::where('isDisplay', false)
         ->orderBy('id', 'DESC')
         ->get();
     }
