@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -23,19 +24,21 @@ class AdminSeeder extends Seeder
             'name' => 'super_admin',
             'email' => 'admin@powersmile.wiz',
             'user_type' => 'super_admin',
-            'password' => '$2y$10$xvxH5hYkD8DeUxj1ZHaq3unPqz.2LNs99VZifuauXODAmi6IYcSKy',
+            'password' => Hash::make('psadmin@whizzlogy'),
             'created_by' => 1,
             'updated_by' => null,
         ]);
+        
         User::create([
             'id' => 2,
-            'name' => 'theekshani',
-            'email' => 'theekshani@middeniya.wiz',
+            'name' => 'Theekshani',
+            'email' => 'theekshani@middeniya.whizzlogy',
             'user_type' => 'user',
-            'password' => '$2y$10$iEgxjYjBXLEz.ojbchK1zOkpAfdn8IjdNzMUHtSuMoUVWOASLn2da',
+            'password' => Hash::make('pstheekshani@middeniya.whizzlogy'),
             'created_by' => 1,
             'updated_by' => null,
         ]);
+
         User::create([
             'id' => 3,
             'name' => 'tashila',
@@ -45,6 +48,7 @@ class AdminSeeder extends Seeder
             'created_by' => 1,
             'updated_by' => null,
         ]);
+
         User::create([
             'id' => 4,
             'name' => 'Sashini',
@@ -54,12 +58,33 @@ class AdminSeeder extends Seeder
             'created_by' => 1,
             'updated_by' => null,
         ]);
+
         User::create([
             'id' => 5,
-            'name' => 'theekshani',
-            'email' => 'theekshani@weeraketiya.wiz',
+            'name' => 'Theekshani',
+            'email' => 'theekshani@weeraketiya.whizzlogy',
             'user_type' => 'user',
-            'password' => '$2y$10$H27HmoUx/42CE99.r6hxZe7YxNrGzTakhipoQB1WdZK2yRWakO7vq',
+            'password' => Hash::make('pstheekshani@weeraketiya.whizzlogy'),
+            'created_by' => 1,
+            'updated_by' => null,
+        ]);
+        
+        User::create([
+            'id' => 6,
+            'name' => 'Uththara',
+            'email' => 'uththara@weeraketiya.whizzlogy',
+            'user_type' => 'user',
+            'password' => Hash::make('psuththara@weeraketiya.whizzlogy'),
+            'created_by' => 1,
+            'updated_by' => null,
+        ]);
+
+        User::create([
+            'id' => 7,
+            'name' => 'Anuththara',
+            'email' => 'anuththara@middeniya.whizzlogy',
+            'user_type' => 'user',
+            'password' => Hash::make('psauththara@middeniya.whizzlogy'),
             'created_by' => 1,
             'updated_by' => null,
         ]);

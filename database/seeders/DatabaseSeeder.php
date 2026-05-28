@@ -29,12 +29,14 @@ class DatabaseSeeder extends Seeder
         $this->call(AlergySeeder::class);
         $this->call(DiseaseSeeder::class);
         $this->call(PatientTypeSeeder::class);
+
         $this->call(PatientSeeder::class);
         $this->call(PatientAlergiesAndDiseasesSeeder::class);
         $this->call(PatientImagesSeeder::class);
         $this->call(PatientNextVisitSeeder::class);
 
         $this->call(SaveTemplateSeeder::class);
+        $this->call(SavedTreatmentPaymentSeeder::class);
         $this->call(OtherPaymentSeeder::class);
     }
 }
