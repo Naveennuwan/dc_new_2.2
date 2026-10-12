@@ -71,6 +71,8 @@ class CenterSeeder extends Seeder
         User::where('id', 3)->update(['center_id' => 1]);
         User::where('id', 4)->update(['center_id' => 2]);
         User::where('id', 5)->update(['center_id' => 1]);
+        User::where('id', 6)->update(['center_id' => 1]);
+        User::where('id', 7)->update(['center_id' => 2]);
 
     }
 }

@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
      */
     
     //      admin@powersmile.wiz
-    //      powersmile@wiz
+    //      psadmin@whizzlogy
 
     public function run()
     {
@@ -34,7 +34,7 @@ class AdminSeeder extends Seeder
             'name' => 'Theekshani',
             'email' => 'theekshani@middeniya.whizzlogy',
             'user_type' => 'user',
-            'password' => Hash::make('pstheekshani@middeniya.whizzlogy'),
+            'password' => Hash::make('pstheekshani'),
             'created_by' => 1,
             'updated_by' => null,
         ]);
@@ -64,7 +64,7 @@ class AdminSeeder extends Seeder
             'name' => 'Theekshani',
             'email' => 'theekshani@weeraketiya.whizzlogy',
             'user_type' => 'user',
-            'password' => Hash::make('pstheekshani@weeraketiya.whizzlogy'),
+            'password' => Hash::make('pstheekshani'),
             'created_by' => 1,
             'updated_by' => null,
         ]);
@@ -74,7 +74,7 @@ class AdminSeeder extends Seeder
             'name' => 'Uththara',
             'email' => 'uththara@weeraketiya.whizzlogy',
             'user_type' => 'user',
-            'password' => Hash::make('psuththara@weeraketiya.whizzlogy'),
+            'password' => Hash::make('psuththara'),
             'created_by' => 1,
             'updated_by' => null,
         ]);
@@ -84,7 +84,7 @@ class AdminSeeder extends Seeder
             'name' => 'Anuththara',
             'email' => 'anuththara@middeniya.whizzlogy',
             'user_type' => 'user',
-            'password' => Hash::make('psauththara@middeniya.whizzlogy'),
+            'password' => Hash::make('psauththara'),
             'created_by' => 1,
             'updated_by' => null,
         ]);

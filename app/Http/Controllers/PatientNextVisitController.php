@@ -4,19 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Http\DataLayer\PatientNextVisitDataLayer;
 use App\Http\DataLayer\PatientDataLayer;
+use App\Http\DataLayer\AppointmentDataLayer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\PatientNextVisitRequest;
 use App\Services\SmsService;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PatientNextVisitController extends Controller
 {
     protected $nextVisitDL;
     protected $patientDL;
-    public function __construct(PatientDataLayer $patientDL,PatientNextVisitDataLayer $nextVisitDL)
+    protected $appointmentDL;
+    public function __construct(
+        AppointmentDataLayer $appointmentDL,
+        PatientDataLayer $patientDL,
+        PatientNextVisitDataLayer $nextVisitDL)
     {
         $this->nextVisitDL = $nextVisitDL;
         $this->patientDL = $patientDL;
+        $this->appointmentDL = $appointmentDL;
         // $this->middleware('permission:next-visit-access');
         // $this->middleware('permission:next-visit-create', ['only' => ['create', 'store']]);
         // $this->middleware('permission:next-visit-edit', ['only' => ['edit', 'update']]);
@@ -44,16 +52,31 @@ class PatientNextVisitController extends Controller
     public function store(PatientNextVisitRequest $request)
     {
         try {
+            $dataObj = $this->appointmentDL->insert($request);
+            // dd($request->all());
+
             $dataObj = $this->nextVisitDL->insert($request);
 
-            $patientObj = $this->patientDL->getById($request->patient_id);$patientName = $patientObj->name;
+            $patientObj = $this->patientDL->getById($request->patient_id);
+            
+            $name = $patientObj->name;
+            $contact_no = $patientObj->contact_no;
+            $doctor_id = intval($request['doctor_id']);
+            $patient_type_id = $patientObj->patient_type_id;
+            $center_id = Auth::user()->center_id;
+            $appointment_date = Carbon::parse(trim($request->input('appointment_date')));
+            $appointment_time = !empty($request->input('appointment_time'))
+                    ? Carbon::createFromFormat('H:i', trim($request->input('appointment_time')))->format('H:i:s')
+                    : null;
+            $remark = $request->input('remark', 'next visit');
+            $created_by = Auth::user()->id;
             
             $nextDate = $request->next_date;
             $time = $request->time;
             if (!empty($time)) {
-                $text = "Hi {$patientName}, You have an appointment scheduled for {$nextDate} at {$time}. We look forward to seeing you.";
+                $text = "Hi {$name}, You have an appointment scheduled for {$nextDate} at {$time}. We look forward to seeing you.";
             } else {
-                $text = "Hi {$patientName}, You have an appointment scheduled for {$nextDate}. We look forward to seeing you.";
+                $text = "Hi {$name}, You have an appointment scheduled for {$nextDate}. We look forward to seeing you.";
             }
 
             $this->Send_SMS($request->patient_id,$text);

@@ -62,6 +62,7 @@ class TemplateController extends Controller
                 'dataObj'  => null,
                 'dataBodyObj' => [],
                 'dataLabObj' => [],
+                'dataPriceObj' => [],
                 'productObj'  => $productObj,
                 'templateTypeObj'   => $templateTypeObj,
                 'templateCategoryObj' => $templateCategoryObj,

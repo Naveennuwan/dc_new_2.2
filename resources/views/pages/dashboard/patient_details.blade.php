@@ -65,6 +65,8 @@ $colClass = ($hasAdvance && $hasDiscount) ? 'col-12 col-md-6' : 'col-12';
                             $price = $nextPrice ? $nextPrice->price : 0;
                         }
                         $totalTreatement = $totalTreatement + $price;
+
+                        $isPaid = (float)$price == (float)$row->payment;
                     @endphp
                     <tr>
                         <td>{{ $row->template_name }}</td>
@@ -74,18 +76,21 @@ $colClass = ($hasAdvance && $hasDiscount) ? 'col-12 col-md-6' : 'col-12';
                             <form action="{{ route('invoice.destroy', $row->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="modern-btn btn-coral" onclick="return confirm('Are you sure you want to delete this Treatment?')">
+                                <button type="submit" class="modern-btn btn-coral fixed-width-button-120" onclick="return confirm('Are you sure you want to delete this Treatment?')">
                                     <i class="fas fa-trash" title="Delete"></i>
                                     Delete
                                 </button>
                             </form>
                             <button
-                                class="modern-btn btn-lime ml-1 pay-advance-btn"
+                                class="modern-btn btn-lime ml-1 pay-advance-btn fixed-width-button-120 {{ $isPaid ? 'disabled' : '' }}"
                                 data-toggle="modal"
-                                data-target="#payAdvanceModal"
+                                data-target="{{ $isPaid ? '' : '#payAdvanceModal' }}"
                                 data-row-id="{{ $row->id }}"
-                                data-template-value="{{ $price }}">
-                                Pay Balance
+                                data-template-value="{{ $price }}"
+                                {{ $isPaid ? 'disabled' : '' }}>
+                                
+                                {{ $isPaid ? 'Paid' : 'Pay Balance' }}
+
                             </button>
                         </td>
                     </tr>

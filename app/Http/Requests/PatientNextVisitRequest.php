@@ -25,8 +25,8 @@ class PatientNextVisitRequest extends FormRequest
     {
         return [
             'patient_id' => 'required|exists:patients,id', 
-            'next_date' => 'required|date',
-            'time' => 'nullable|date_format:H:i',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'nullable|date_format:H:i',
         ];
     }
 }

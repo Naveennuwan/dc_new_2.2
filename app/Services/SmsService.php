@@ -19,24 +19,39 @@ class SmsService
 
     public function sendSms($patientId, $message)
     {
+        //return;
         $patient = Patient::find($patientId);
-
-        // dd($patientId, $message);
 
         if (!$patient) {
             return false;
         }
 
-        $sendTo = "94705742090";
-        // $to = "94711649932";
+        if (empty($patient->patient_contact_no)) {
+            return false;
+        }
+        
+        $text = urlencode($message);
+        $url = "{$this->baseurl}/?id={$this->user}&pw={$this->password}&to={$patient->patient_contact_no}&text={$text}";
+        $response = @file($url);
 
+        if (!$response || count($response) == 0) {
+            return false;
+        }
+
+
+        $result = explode(":", $response[0]);
+        return trim($result[0]) == "OK";
+    }
+
+    public function sendAppointmentSms($sendTo, $message)
+    {
+        //return;
         if (empty($sendTo)) {
             return false;
         }
         
         $text = urlencode($message);
         $url = "{$this->baseurl}/?id={$this->user}&pw={$this->password}&to={$sendTo}&text={$text}";
-        // dd($url, $message);
         $response = @file($url);
 
         if (!$response || count($response) == 0) {

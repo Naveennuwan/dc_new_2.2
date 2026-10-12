@@ -70,85 +70,95 @@
     </div>
 </div>
 
-<!--Next Visit Modal -->
+<!-- Next Visit Modal -->
 <div class="modal fade" id="nextVisitModal">
     <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                
-                <div class="modal-header"></div>
-                
-                <div class="modal-body text-center">
-                    <h6>Add Next Visit</h6>
-                </div>
+        <div class="modal-content">
 
-                <form method="POST" action="{{ route('next-visit.store') }}" id="nextVisitForm"
-                    data-parsley-validate class="form-horizontal form-label-left">
-                    @csrf
-    
-                    <div class="card-body">
-
-                    {{-- Patient --}}
-                    <div class="form-row">
-                        <div class="form-group col-12">
-                            <label for="next_visit_patient_id">Patient</label>
-                            <select name="patient_id"
-                                    id="next_visit_patient_id"
-                                    class="js-example-basic-single form-control @error('patient_id') is-invalid @enderror"
-                                    required>
-                                <option value="">Select patient</option>
-
-                                @foreach ($patientObj as $patient)
-                                    <option value="{{ $patient->id }}"
-                                        {{ old('patient_id', $searchingVals['patient_id'] ?? '') == $patient->id ? 'selected' : '' }}>
-                                        {{ $patient->patient_register_id }} - {{ $patient->name }} - {{ $patient->patient_address }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('patient_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    {{-- Date & Time --}}
-                    <div class="form-row">
-                        <div class="form-group col-12 col-md-6">
-                            <label for="next_visit_date">Select Date</label>
-                            <input type="date"
-                                name="next_date"
-                                id="next_visit_date"
-                                class="form-control @error('next_date') is-invalid @enderror"
-                                value="{{ old('next_date', $dataObj->next_date ?? '') }}"
-                                required>
-
-                            @error('next_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-12 col-md-6">
-                            <label for="next_visit_time">Select Time</label>
-                            <input type="time"
-                                name="time"
-                                id="next_visit_time"
-                                class="form-control @error('time') is-invalid @enderror"
-                                value="{{ old('time', $dataObj->time ?? '') }}"
-                                required>
-
-                            @error('time')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-            
-            <div class="modal-footer">
-                <button type="button" class="btn bg-grey" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn bg-red" id="save-next-visit-btn">Save</button>
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title">Add Next Visit</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
+
+            <!-- FORM START -->
+            <form method="POST" action="{{ route('next-visit.store') }}" id="nextVisitForm">
+                @csrf
+
+                <div class="modal-body">
+
+                    <!-- Patient -->
+                    <div class="form-group">
+                        <label>Patient</label>
+                        <select name="patient_id"
+                                class="form-control js-example-basic-single w-100"
+                                required>
+                            <option value="">Select patient</option>
+                            @foreach ($patientObj as $patient)
+                            <option
+                            value="{{ $patient->id }}"
+                            {{ old('patient_id', $searchingVals['patient_id'] ?? '') == $patient->id ? 'selected' : '' }}
+                        >
+                            {{ $patient->patientType->name[0] }}P-{{ $patient->patient_register_id }}
+                            - {{ $patient->name }}
+                            - {{ $patient->patient_address }}
+                            - {{ $patient->patient_contact_no }}
+                        </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Doctor -->
+                    <div class="form-group">
+                        <label>Doctor</label>
+                        <select name="doctor_id"
+                                class="form-control js-example-basic-single w-100"
+                                required>
+                            <option value="">Select doctor</option>
+                            @foreach ($doctorObj as $doctor)
+                                <option value="{{ $doctor->id }}">
+                                    {{ $doctor->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Date & Time in ONE ROW -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Date</label>
+                            <input type="date"
+                                   name="appointment_date"
+                                   class="form-control"
+                                   required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Time</label>
+                            <input type="time"
+                                   name="appointment_time"
+                                   class="form-control"
+                                   required>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <!-- ✅ Proper submit -->
+                    <button type="submit" class="btn btn-primary">
+                        Save
+                    </button>
+                </div>
+
+            </form>
+            <!-- FORM END -->
+
         </div>
     </div>
 </div>
@@ -258,6 +268,10 @@
         height: 40px;
         border-radius: 10px;
     }
+    
+    .select2-container {
+    width: 100% !important;
+}
 
     .select2-container .select2-selection--single {
         height: 40px;

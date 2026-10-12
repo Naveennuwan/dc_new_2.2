@@ -106,6 +106,7 @@ class SavedTreatementDataLayer
         try {
             // Get treatments with payment summary
             $treatments = SavedTreatment::with(['template', 'doctor', 'center'])
+                ->where('patient_id', $patientId)
                 ->where('isSettled', 1)
                 ->orderBy('created_at', 'desc')
                 ->get();

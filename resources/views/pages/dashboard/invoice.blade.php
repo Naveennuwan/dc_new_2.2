@@ -115,7 +115,7 @@
                 </div>
                 <div class="form-group col-6 col-sm-6">
                     <label >Center :- </label>
-                    {{$patientDetails->center->name}}
+                    <!-- {{$patientDetails->center->name}} -->
                 </div>
             </div>
 

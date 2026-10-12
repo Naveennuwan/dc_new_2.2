@@ -10,7 +10,7 @@ use App\Models\Doctor;
 use App\Models\Advance;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\PatientNextVisit;
+use App\Models\Appointment;
 use App\Models\TemplateBody;
 use App\Models\Center;
 use App\Models\SavedTreatment;
@@ -841,8 +841,6 @@ class Exports
 
         $Drugs = $savedTreatementDL->getPatientDrugTemplates($patientId) ?? [];
 
-        // dd($treatments);
-
         if (count($Drugs)) {
             // Table Header..........................................................
             $pdf->Ln(2);
@@ -901,15 +899,16 @@ class Exports
         $pdf->SetFont('Helvetica', 'B', 9);
         $pdf->Ln(5);
 
-        $visits = PatientNextVisit::where('next_date', '>=', Carbon::now()->format('Y-m-d'))
-        ->where('patient_id', '=', $patientId)
-        ->orderBy('next_date')
+        $visits = Appointment::where('appointment_date', '>=', Carbon::now()->format('Y-m-d'))
+        ->where('patient_id', $patientId)
+        ->orderBy('appointment_date')
+        ->orderBy('appointment_time')
         ->first();
 
         if ($visits) {
-            $nextVisitTime = Carbon::parse($visits->time);
+            $nextVisitTime = Carbon::parse($visits->appointment_time);
             $formattedTime = $nextVisitTime->format('h:i A');
-            $pdf->Write(0, 'Next Visit: ' . $visits->next_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
+            $pdf->Write(0, 'Next Visit: ' . $visits->appointment_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
         } else {
             $pdf->Write(0, 'Next Visit: ', '', 0, 'L', true, 0, false, false, 5);
         }

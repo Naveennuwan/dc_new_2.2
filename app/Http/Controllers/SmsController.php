@@ -109,7 +109,7 @@ class SmsController extends Controller
             
             $paragraph = "Download your images using the links:\n";
             
-            $paragraph .= "images.dental-clinic.lk/$patientId/{$dataObj->image}\n";
+            $paragraph .= "images.powersmile.lk/$patientId/{$dataObj->image}\n";
             
             $patient = $this->patientDL->getById($patientId);
             
@@ -133,10 +133,12 @@ class SmsController extends Controller
             $paragraph = "Download your images using the links:\n";
             
             foreach ($dataObj as $image) {
-                $paragraph .= "images.dental-clinic.lk/$patientId/{$image->image}\n";
+                $paragraph .= "images.powersmile.lk/$patientId/{$image->image}\n";
             }
             
             $patient = $this->patientDL->getById($patientId);
+
+            
             
             if (preg_match('/^94\d{9}$/', $patient->patient_contact_no)) {
                 $this->Send_SMS($patient->id,$paragraph);

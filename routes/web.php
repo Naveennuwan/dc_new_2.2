@@ -26,6 +26,7 @@ use App\Http\Controllers\PatientController;
 
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\MedicalController;
+use App\Http\Controllers\AppointmentController;
 
 use App\Http\Controllers\TemplateController;
 
@@ -166,6 +167,15 @@ Route::middleware('auth')->group(function () {
     Route::match(['get', 'post'], '/search-medical', [MedicalController::class, 'search'])->name('medical.search');
     Route::post('/export-medical', [MedicalController::class, 'export'])->name('medical.export');
     Route::get('/medical-report/{patient_id}', [MedicalController::class, 'report'])->name('medical.report');
+
+    Route::resource('/next-visit', PatientNextVisitController::class);
+    Route::match(['get', 'post'], '/search-next-visit', [PatientNextVisitController::class, 'search'])->name('next-visit.search');
+    Route::post('/export-next-visit', [PatientNextVisitController::class, 'export'])->name('next-visit.export');
+
+    Route::resource('/appointment', AppointmentController::class);
+    Route::match(['get', 'post'], '/search-appointment', [AppointmentController::class, 'search'])->name('appointment.search');
+    Route::get('/display-appointment', [AppointmentController::class, 'display'])->name('appointment.display');
+    Route::patch('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status');
     
     // Template Management
     Route::resource('/template', TemplateController::class);
@@ -175,10 +185,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('/other-payment', OtherPaymentController::class);
     Route::match(['get', 'post'], '/search-other-payment', [OtherPaymentController::class, 'search'])->name('other-payment.search');
     Route::post('/export-other-payment', [OtherPaymentController::class, 'export'])->name('other-payment.export');
-
-    Route::resource('/next-visit', PatientNextVisitController::class);
-    Route::match(['get', 'post'], '/search-next-visit', [PatientNextVisitController::class, 'search'])->name('next-visit.search');
-    Route::post('/export-next-visit', [PatientNextVisitController::class, 'export'])->name('next-visit.export');
     
     Route::get('/routine-invoice', [DashBoardController::class, 'routine'])->name('invoice.routine');
     Route::get('/orthodontic-invoice', [DashBoardController::class, 'orthodontic'])->name('invoice.orthodontic');

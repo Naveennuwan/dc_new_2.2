@@ -45,7 +45,8 @@
             </button>
             <div class="dropdown-content">
                 <a href="{{ route('patient.index') }}">Patient</a>
-                <a href="{{ route('next-visit.index') }}">Patient Next Visit</a>
+                <!-- <a href="{{ route('next-visit.index') }}">Patient Next Visit</a> -->
+                <a href="{{ route('appointment.index') }}">Appoinment</a>
                 <a href="{{ route('medical.index') }}">Medical Report</a>
                 <a href="{{ route('leave.index') }}">Leave Request Letter</a>
             </div>

@@ -47,9 +47,8 @@ class PatientController extends Controller
         ];
         return view('pages.patient.index')->with($params);
     }
-
     
-    public function create()
+    public function create(Request $request)
     {
         try {
             $patientTypes = $this->patientTypeDL->getAllActive();
@@ -57,13 +56,23 @@ class PatientController extends Controller
             $alergys = $this->alergyDL->getAllActive();
             $diseases = $this->diseaseDL->getAllActive();
             $patients = $this->patientDL->getAll();
+        
+            $name = $request->query('name');
+            $contact = $request->query('patient_contact_no');
+
             $params = [
+                'dataObj'  => [
+                    'name' => $name,
+                    'isDisplay' => 0,
+                    'patient_contact_no' => $contact
+                ],
                 'patientTypes'   => $patientTypes ,
                 'orthodonticPlans'   => $orthodonticPlans,
                 'alergys'   => $alergys,
                 'diseases'   => $diseases,
                 'patients'   => $patients,
             ];
+            
             return view('pages.patient.create')->with($params);
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
@@ -87,7 +96,7 @@ class PatientController extends Controller
                        
             $smsService->sendSms((int) $dataObj->id, $message);
             
-            return redirect()->route('patient.index')->with('success', 'Dear '.$dataObj->name.' your registration is successful.');
+            return redirect()->route('patient.index')->with('success', $dataObj->name.' your registration is successful.');
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
                 return response()->view('errors.' . '404');
@@ -161,7 +170,7 @@ class PatientController extends Controller
     {
         try {
             $dataObj = $this->patientDL->update($request, $id);
-            return redirect()->route('patient.index')->with('success', trans('general.form.flash.updated', ['name' => $dataObj->name]));
+            return redirect()->route('patient.index')->with('success', $dataObj->name.' Update is successful.');
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
                 return response()->view('errors.' . '404');
@@ -173,7 +182,7 @@ class PatientController extends Controller
     {
         try {
             $dataObj = $this->patientDL->delete($id);
-            return redirect()->route('patient.index')->with('success', trans('general.form.flash.deleted', ['name' => $dataObj->name]));
+            return redirect()->route('patient.index')->with('success', $dataObj->name.' Deleted successfully.');
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
                 return response()->view('errors.' . '404');

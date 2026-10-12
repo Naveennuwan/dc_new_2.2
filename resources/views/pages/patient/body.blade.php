@@ -6,7 +6,7 @@
             <div class="col-9 col-sm-9 col-md-8">
                 <input type="text" class="form-control @error('name') is-invalid @enderror"
                     id="name" name="name" placeholder="Name"
-                    value="{{ Request::old('name', $dataObj->name ?? '') }}" maxlength="255">
+                    value="{{ Request::old('name', $dataObj['name'] ?? '') }}" maxlength="255">
                 @error('name')
                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                 @enderror
@@ -18,7 +18,7 @@
             <div class="input-group-prepend">
                 <div class="input-group-text">
                     <input type="checkbox" id="isDisplay" name="isDisplay" value="1"
-                        {{ Request::old('isDisplay', isset($dataObj) && $dataObj->isDisplay ? '1' : '') == '1' ? 'checked' : '' }}>
+                        {{ Request::old('isDisplay', $dataObj['isDisplay'] ? '1' : '') == '1' ? 'checked' : '' }}>
                 </div>
             </div>
             <label for="isDisplay" class="form-label col-3 col-sm-3 col-md-4">Display</label>
@@ -78,7 +78,8 @@
             <div class="col-9 col-sm-9 col-md-8">
                 <input type="text" class="form-control @error('patient_contact_no') is-invalid @enderror"
                     id="patient_contact_no" name="patient_contact_no" placeholder="Contact No"
-                    value="{{ Request::old('patient_contact_no', $dataObj->patient_contact_no ?? '') }}" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    value="{{ Request::old('patient_contact_no', $dataObj['patient_contact_no'] ?? '') }}"
+                    maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                 @error('patient_contact_no')
                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                 @enderror
@@ -97,14 +98,10 @@
                     class="js-example-basic-single form-control @error('patient_gender') is-invalid @enderror"
                     id="patient_gender" name="patient_gender">
                     <option value="" selected>select Gender</option>
-                    <option
-                        {{ old('patient_gender', isset($dataObj) && $dataObj->patient_gender == "Male" ? "Male" : '') == "Male" ? 'selected' : '' }}
-                        value="Male">
+                    <option {{ old('patient_gender', $dataObj['patient_gender'] ?? '') == 'Male' ? 'selected' : '' }} value="Male">
                         Male
                     </option>
-                    <option
-                        {{ old('patient_gender', isset($dataObj) && $dataObj->patient_gender == "Female" ? "Female" : '') == "Female" ? 'selected' : '' }}
-                        value="Female">
+                    <option {{ old('patient_gender', $dataObj['patient_gender'] ?? '') == 'Female' ? 'selected' : '' }} value="Female">
                         Female
                     </option>
                     <input type="hidden" class="form-control @error('patient_gender') is-invalid @enderror">
@@ -143,11 +140,10 @@
                     <option value="" selected>select patient type</option>
                     @foreach ($patientTypes as $type)
                     <option
-                            {{ old('patient_type_id', isset($dataObj) && $dataObj->patient_type_id == $type->id ? $type->id : '') == $type->id ? 'selected' : '' }}
-                            value="{{ $type->id }}">
-                            {{ $type->name }}
-                        </option>
-
+                        {{ old('patient_type_id', $dataObj['patient_type_id'] ?? '') == $type->id ? 'selected' : '' }}
+                        value="{{ $type->id }}">
+                        {{ $type->name }}
+                    </option>
                     @endforeach
                     <input type="hidden" class="form-control @error('patient_type_id') is-invalid @enderror">
                     @error('patient_type_id')
@@ -168,10 +164,10 @@
                     <option value="" selected>select orthodontice plan</option>
                     @foreach ($orthodonticPlans as $plan)
                     <option 
-                            {{ old('orthodontice_plan_id', isset($dataObj) && $dataObj->orthodontice_plan_id == $plan->id ? $plan->id : '') == $plan->id ? 'selected' : '' }}
-                            value="{{ $plan->id }}">
-                            {{ $plan->name }}
-                        </option>
+                        {{ old('orthodontice_plan_id', $dataObj['orthodontice_plan_id'] ?? '') == $plan->id ? 'selected' : '' }}
+                        value="{{ $plan->id }}">
+                        {{ $plan->name }}
+                    </option>
 
                     @endforeach
                     <input type="hidden" class="form-control @error('orthodontice_plan_id') is-invalid @enderror">
@@ -195,13 +191,11 @@
                     <option value="">Select Parent Patient</option>
                     @foreach ($patients as $patient)
                         {{-- Prevent selecting itself as a parent --}}
-                        @if (!isset($dataObj) || $dataObj->id !== $patient->id)
                             <option
-                                {{ old('parent_patient_id', $dataObj->parent_patient_id ?? '') == $patient->id ? 'selected' : '' }}
+                                {{ old('parent_patient_id', $dataObj['parent_patient_id'] ?? '') == $patient->id ? 'selected' : '' }}
                                 value="{{ $patient->id }}">
                                 {{ $patient->name }} ({{ $patient->patient_contact_no }})
                             </option>
-                        @endif
                     @endforeach
                 </select>
                 @error('parent_patient_id')
@@ -211,7 +205,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="form-group row">
     <label for="allergen" class="form-label col-3 col-sm-3 col-md-2">Alergy</label>
@@ -286,68 +279,4 @@
             });
         });
     </script>
-
-
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var patientTypeSelect = document.getElementById('patient_type_id');
-        const orthoPlanArea = document.getElementById('Orthodontice_Plan_Area');
-
-        // console.log(patientTypeSelect).value;
-        // console.log(orthoPlanArea);
-        console.log(patientTypeSelect.value);
-
-        // Debugging: Ensure elements are selected
-        console.log('Patient Type Select Element:', patientTypeSelect);
-        console.log('Orthodontice Plan Area Element:', orthoPlanArea);
-
-        // Check if the elements exist
-        if (!patientTypeSelect || !orthoPlanArea) {
-            console.error('One or more elements are not found in the DOM.');
-            return;
-        }
-
-// Ensure the event listener is added correctly
-patientTypeSelect.addEventListener('change', function () {
-    console.log('Patient type changed:', this.value);
-    if (this.value == 1) {
-        orthoPlanArea.style.display = 'block';
-    } else {
-        orthoPlanArea.style.display = 'none';
-    }
-});
-
-        patientTypeSelect.addEventListener('change', function () {
-            console.log('Patient type changed:', this.value);
-            if (this.value == 1) {
-                orthoPlanArea.style.display = 'block';
-            } else {
-                orthoPlanArea.style.display = 'none';
-            }
-        });
-
-        // Check the initial state on page load
-        if (patientTypeSelect.value == 1) {
-            orthoPlanArea.style.display = 'block';
-        } else {
-            orthoPlanArea.style.display = 'none';
-        }
-    });
-</script> -->
-
-    <!-- <script>
-        // When click radio button yes or no handle
-        function checkRadioButton(radio) {
-            const patientTypeSelect = document.getElementById('patient_type_id');
-            const orthoPlanArea = document.getElementById('Orthodontice_Plan_Area');
-
-            if (patientTypeSelect.value == 1) {
-                patientTypeSelect.style.display = '';
-                orthoPlanArea.style.display = 'none';
-            } else {
-                patientTypeSelect.style.display = 'none';
-                orthoPlanArea.style.display = '';
-            }
-        }
-    </script> -->
 @endpush
