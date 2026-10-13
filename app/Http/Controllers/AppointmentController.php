@@ -96,13 +96,11 @@ class AppointmentController extends Controller
             
             if (is_null($dataObj->patient_id)) {
                 $text = "Hi {$patientName}, your appointment {$appointment_no} is confirmed for {$date}{$timeText}. Please arrive 10 mins early.";
-                dd($text);
                 $this->Send_SMS($contact_no, $text);
             }
             else{
                 $patientObj = $this->patientDL->getById($dataObj->patient_id);
                 $text = "Hi {$patientObj->name}, your appointment {$appointment_no} is confirmed for {$date}{$timeText}. Please arrive 10 mins early.";
-                dd($text);
                 $this->Send_SMS($patientObj->patient_contact_no, $text);
             }
             return redirect()->route('appointment.index')->with('success', 'Created Successfully '. $dataObj->name);
@@ -136,8 +134,6 @@ class AppointmentController extends Controller
                 'status' => 'confirmed',
                 'patient_type_id' => 2,
             ]);
-
-            // dd($routineQueue,$orthoQueue);
             
             $routeCollection = collect($routineQueue);
             $OrthoCollection = collect($orthoQueue);
@@ -151,8 +147,7 @@ class AppointmentController extends Controller
                 'orthoNext'    => $OrthoCollection->get(1),
                 'orthoQueue' => $OrthoCollection->slice(2)->take(5)->values(),
             ];
-
-            // dd($params);
+            
             return view('pages.appointments.display')->with($params);
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
@@ -165,10 +160,7 @@ class AppointmentController extends Controller
     public function show($id)
     {
         try {
-            // $dataObj = $this->nextVisitDL->getById($id);
-            $params = [
-                // 'dataObj' => $dataObj,
-            ];
+            $params = [];
             return view('pages.appointments.delete')->with($params);
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
@@ -231,7 +223,6 @@ class AppointmentController extends Controller
     public function destroy($id)
     {
         try {
-            // $dataObj = $this->nextVisitDL->delete($id);
             return redirect()->ortho('appointments.index')->with('success', 'Successfully Deleted');
         } catch (ModelNotFoundException $ex) {
             if ($ex instanceof ModelNotFoundException) {
@@ -247,7 +238,6 @@ class AppointmentController extends Controller
             'search_date'   => $request->search_date,
             'search_status' => $request->search_status,
         ];
-        // dd($constraints);
 
         $dataObj = $this->appointmentDL->doSearchingQuery($constraints);
         
@@ -266,7 +256,6 @@ class AppointmentController extends Controller
 
         $dataObj = $this->appointmentDL->updateStatus($request, $id);
 
-        // dd($dataObj->status);
         $color = 'success';
 
         if ($dataObj->status == 'confirmed') {

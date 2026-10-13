@@ -1,135 +1,185 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="box">
-        <div class="row-1">
-            <div class="img-box">
-                <img src="{{ asset('images/logo2.png') }}" alt="logo" class="">
-            </div>
+    <div class="invoice-home">
+        <div class="logo-box">
+            <img src="{{ asset('images/logo2.png') }}" alt="Power Smile Logo">
         </div>
-        <div class="row-2">
-            <a href="{{ route('invoice.routine') }}" class="btn-01 ">Routine Invoice</a>
-            <a href="{{ route('invoice.orthodontic') }}" class="btn-01 ">Orthodontic Invoice</a>
+
+        <div class="menu-buttons">
+            <a href="{{ route('invoice.routine') }}" class="menu-btn">
+                <i class="fas fa-file-invoice"></i>
+                <span>Routine Invoice</span>
+            </a>
+
+            <a href="{{ route('invoice.orthodontic') }}" class="menu-btn">
+                <i class="fas fa-tooth"></i>
+                <span>Orthodontic Invoice</span>
+            </a>
+
+            <a href="{{ route('appointment.index') }}" class="menu-btn">
+                <i class="fas fa-calendar-check"></i>
+                <span>Appointment</span>
+            </a>
         </div>
     </div>
 @endsection
+
 @push('css')
     <style>
-        img {
-            width: auto;
-            max-width: 50%;
-        }
-
-        .img-box,
-        .text-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .box {
-            width: 1200px;
+        .invoice-home {
+            width: 100%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: clamp(20px, 5vw, 80px) clamp(15px, 4vw, 50px);
             background: #fff;
-            margin: auto;
-            padding: 80px 50px;
+            border-radius: 10px;
+            box-sizing: border-box;
             text-align: center;
         }
 
-        .box .row-1 {
-            margin-bottom: 15px;
-        }
-
-        .box .row-1 .date {
-            font-weight: 700;
-            font-size: 22px;
-        }
-
-        .box .row-1 .time {
-            font-size: 40px;
-            color: var(--black);
-        }
-
-        .box .row-2 {
+        .logo-box {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
+            margin-bottom: 35px;
         }
 
-        .box .row-2 a {
-            text-decoration: none;
+        .logo-box img {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            max-height: 220px;
+            height: auto;
+            object-fit: contain;
         }
 
-        .box .row-2 a:hover {
-            color: #c14829;
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 350px));
+            justify-content: center;
+            gap: 20px;
         }
 
-        .box .row-2 .btn-01 {
-            font-size: 22px;
-            width: 350px;
-            height: 90px;
-            border: 2px solid #CCCCCC;
+        .menu-btn {
+            min-height: 90px;
+            padding: 15px 20px;
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10);
+
             color: #5f5f5f;
+            font-size: 20px;
             font-weight: 700;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px #cdcdcd;
-            margin: 10px;
+            text-align: center;
+            text-decoration: none;
+
+            transition: background-color 0.2s ease,
+                        color 0.2s ease,
+                        transform 0.2s ease;
         }
 
-        .box .row-2 a:hover {
-            cursor: pointer;
-            filter: brightness(80%);
+        .menu-btn i {
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
-        .box .row-2 .btn-01.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            pointer-events: none;
+        .menu-btn:hover {
+            color: #c14829;
+            background: #fafafa;
+            border-color: #c14829;
+            transform: translateY(-2px);
+            text-decoration: none;
         }
 
-        @media (max-width: 1200px) {
-            .box {
-                padding: 80px 40px;
-                width: 100%;
-                max-width: 800px;
+        .menu-btn:focus-visible {
+            outline: 3px solid #c14829;
+            outline-offset: 3px;
+        }
+
+        /* Tablets */
+        @media (max-width: 768px) {
+            .invoice-home {
+                margin: 15px auto;
+                padding: 35px 20px;
             }
 
-            .box .row-1 .date {
+            .logo-box {
+                margin-bottom: 25px;
+            }
+
+            .logo-box img {
+                max-width: 320px;
+                max-height: 180px;
+            }
+
+            .menu-buttons {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 15px;
+            }
+
+            .menu-btn {
+                min-height: 80px;
+                padding: 12px;
+                font-size: 17px;
+            }
+
+            .menu-btn i {
+                font-size: 21px;
+            }
+        }
+
+        /* Mobile phones */
+        @media (max-width: 576px) {
+            .invoice-home {
+                margin: 10px auto;
+                padding: 25px 15px;
+                border-radius: 6px;
+            }
+
+            .logo-box {
+                margin-bottom: 25px;
+            }
+
+            .logo-box img {
+                max-width: 260px;
+                max-height: 150px;
+            }
+
+            .menu-buttons {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 12px;
+            }
+
+            .menu-btn {
+                width: 100%;
+                min-height: 70px;
+                padding: 15px;
                 font-size: 18px;
             }
 
-            .box .row-1 .time {
-                font-size: 30px;
-            }
-
-            .box .row-2 .btn-01 {
-                width: 300px;
-                height: 80px;
-                margin: 5px;
+            .menu-btn i {
+                font-size: 22px;
             }
         }
 
-        @media (max-width: 768px) {
-            .box {
-                width: 100%;
-                max-width: 500px;
-                padding: 50px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .box {
-                max-width: 360px;
+        /* Very small phones */
+        @media (max-width: 360px) {
+            .invoice-home {
+                padding: 20px 10px;
             }
 
-            .box .row-1 {
-                margin-bottom: 10px;
-            }
-
-            .box .row-2 .btn-01 {
-                min-width: 300px;
+            .menu-btn {
+                min-height: 65px;
+                font-size: 16px;
+                gap: 9px;
             }
         }
     </style>
