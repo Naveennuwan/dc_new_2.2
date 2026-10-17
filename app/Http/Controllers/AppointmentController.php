@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\DataLayer\AppointmentDataLayer;
 use App\Http\Requests\AppointmentRequest;
+use App\Http\DataLayer\CenterDataLayer;
 use App\Http\DataLayer\DoctorDataLayer;
 use App\Http\DataLayer\PatientDataLayer;
 use App\Http\DataLayer\PatientTypeDataLayer;
@@ -19,12 +20,14 @@ class AppointmentController extends Controller
     protected $patientTypeDL;
     public function __construct(
         AppointmentDataLayer $appointmentDL,
+        CenterDataLayer $centerDL,
         DoctorDataLayer $doctorDL,
         PatientDataLayer $patientDL,
         PatientTypeDataLayer $patientTypeDL
         )
     {
         $this->appointmentDL = $appointmentDL;
+        $this->centerDL = $centerDL;
         $this->doctorDL = $doctorDL;
         $this->patientDL = $patientDL;
         $this->patientTypeDL = $patientTypeDL;
@@ -44,16 +47,22 @@ class AppointmentController extends Controller
     
     public function index()
     {
-        $appointmentObj = $this->appointmentDL->getAll();
+
         $constraints = [
-            'name' => null,
-            'isDisplay' => "",
+            'search_name'   => null,
+            'appointment_date'   => null,
+            'center_id' => null,
+            'status' => null,
         ];
+
+        $appointmentObj = $this->appointmentDL->doSearchingQuery($constraints);
+        $centerObj = $this->centerDL->getAll();
         
         $params = [
             'dataObj'   =>  $dataObj ?? [],
             'searchingVals' => $constraints,
-            'appointmentObj' => $appointmentObj
+            'appointmentObj' => $appointmentObj,
+            'centerObj' => $centerObj,
         ];
         return view('pages.appointments.index')->with($params);
     }
@@ -61,11 +70,13 @@ class AppointmentController extends Controller
     public function create()
     {
         $doctorObj = $this->doctorDL->getAllActive();
+        $centerObj = $this->centerDL->getAll();
         $patientObj = $this->patientDL->getAllActive();
         $patientTypeObj = $this->patientTypeDL->getAllActive();
 
         $params = [
             'doctorObj' => $doctorObj,
+            'centerObj' => $centerObj,
             'patientObj' => $patientObj,
             'patientTypeObj' => $patientTypeObj,
         ];
@@ -168,13 +179,7 @@ class AppointmentController extends Controller
             }
         }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
         // dd($id);
@@ -201,25 +206,12 @@ class AppointmentController extends Controller
         ];
         return view('pages.appointments.index')->with($params);
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         try {
@@ -235,14 +227,17 @@ class AppointmentController extends Controller
     {
         $constraints = [
             'search_name'   => $request->search_name,
-            'search_date'   => $request->search_date,
-            'search_status' => $request->search_status,
+            'appointment_date'   => $request->appointment_date,
+            'center_id' => $request->center_id,
+            'status' => $request->status,
         ];
 
         $dataObj = $this->appointmentDL->doSearchingQuery($constraints);
+        $centerObj = $this->centerDL->getAll();
         
         $params = [
             'appointmentObj'   =>  $dataObj,
+            'centerObj' => $centerObj,
             'searchingVals' => $constraints,
         ];
         return view('pages.appointments.index')->with($params);

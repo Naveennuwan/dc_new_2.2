@@ -16,14 +16,14 @@
         <div class="card ongoing">
             <div class="title">Now Serving</div>
             <h1>{{ optional($routineOngoing)->appointment_no ?? '--' }}</h1>
-            <div class="status">{{ optional($routineOngoing)->name ?? 'No patient ongoing' }}</div>
+            <div class="status">{{ $routineOngoing->name ?? $routineOngoing->patient->name ?? 'No patient ongoing' }}</div>
         </div>
 
         <!-- NEXT PATIENT -->
         <div class="card next">
             <div class="title">Next Patient</div>
             <h2>{{ optional($routineNext)->appointment_no ?? '--' }}</h2>
-            <div class="status">{{ optional($routineNext)->name ? optional($routineNext)->name . ' - Ongoing' : 'No patient ongoing' }}</div>
+            <div class="status">{{ $routineNext->name ?? $routineNext->patient->name ?? 'No patient ongoing' }}</div>
         </div>
 
         <!-- UPCOMING LIST -->
@@ -58,14 +58,15 @@
     <div class="card ongoing">
         <div class="title">Now Serving</div>
         <h1>{{ optional($orthoOngoing)->appointment_no ?? '--' }}</h1>
-        <div class="status">{{ optional($orthoOngoing)->name ?? 'No patient ongoing' }}</div>
+        <div class="status">{{ $orthoOngoing->name ?? $orthoOngoing->patient->name ?? 'No patient ongoing' }}</div>
     </div>
 
     <!-- NEXT PATIENT -->
     <div class="card next">
         <div class="title">Next Patient</div>
         <h2>{{ optional($orthoNext)->appointment_no ?? '--' }}</h2>
-        <div class="status">{{ optional($orthoNext)->name ? optional($orthoNext)->name . ' - Ongoing' : 'No patient ongoing' }}</div>
+        <div class="status">{{ $orthoNext->name ?? $orthoNext->patient->name ?? 'No patient ongoing' }}</div>
+        <!-- <div class="status">{{ optional($orthoNext)->name ? optional($orthoNext)->name . ' - Ongoing' : 'No patient ongoing' }}</div> -->
     </div>
 
     <!-- UPCOMING LIST -->

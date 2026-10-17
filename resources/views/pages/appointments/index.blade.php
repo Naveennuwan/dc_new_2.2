@@ -42,33 +42,35 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-12 col-sm-4">
+                        <div class="form-group col-sm-3">
                             <label for="search_name">Name</label>
-                            <input type="text" class="form-control" id="search_name" name="search_name"
-                                placeholder="Name"
-                                value="{{ Request::old('search_name', $searchingVals['search_name'] ?? '') }}" maxlength="255">
+                            <input type="text" class="form-control" id="search_name" name="search_name" placeholder="Name" value="{{ Request::old('search_name', $searchingVals['search_name'] ?? '') }}" maxlength="255">
                         </div>
-                        <div class="form-group col-12 col-sm-4">
-                        <label for="search_date">Date</label>
-                            <input type="date" class="form-control"  id="search_date" name="search_date" placeholder="Search date"
-                            value="{{ Request::old('search_date', $searchingVals['search_date'] ?? '') }}">
-                    </div>
-                    <div class="form-group col-12 col-md-4">
-                        <label for="search_status">Display</label>
-                            <select class="js-example-basic-single form-control" id="search_status" name="search_status">
+                        <div class="form-group col-sm-3">
+                            <label for="center_id">Center</label>
+                            <select class="js-example-basic-single form-control" id="center_id" name="center_id">
                                 <option value="" selected>All</option>
-                                <option value="cancelled"
-                                    {{ Request::old('search_status', $searchingVals['search_status'] ?? '') == 'cancelled' ? 'selected' : '' }}>
-                                    Cancelled</option>
-                                <option value="pending"
-                                    {{ Request::old('search_status', $searchingVals['search_status'] ?? '') == 'pending' ? 'selected' : '' }}>
-                                    Pending</option>
-                                <option value="confirmed"
-                                    {{ Request::old('search_status', $searchingVals['search_status'] ?? '') == 'confirmed' ? 'selected' : '' }}>
-                                    Confirmed</option>
-                                <option value="completed"
-                                    {{ Request::old('search_status', $searchingVals['search_status'] ?? '') == 'completed' ? 'selected' : '' }}>
-                                    Completed</option>
+                                @foreach ($centerObj as $center)
+                                        <option {{ Request::old('center_id', $searchingVals['center_id'] ?? '') == $center->id ? 'selected' : '' }}
+                                            value="{{ $center->id }}"> 
+                                            {{ $center->name }}
+                                        </option>
+                                        @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="search_date">Date</label>
+                            <input type="date" class="form-control"  id="appointment_date" name="appointment_date" placeholder="Search date" value="{{ Request::old('appointment_date', $searchingVals['appointment_date'] ?? '') }}">
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="status">Display</label>
+                            <select class="js-example-basic-single form-control" id="status" name="status">
+                                <option value="" selected>All</option>
+                                <option value="cancelled" { Request::old('status', $searchingVals['status'] ?? '') == 'cancelled' ? 'selected' : '' }}> Cancelled</option>
+                                <option value="pending" {{ Request::old('status', $searchingVals['status'] ?? '') == 'pending' ? 'selected' : '' }}> Pending</option>
+                                <option value="confirmed" {{ Request::old('status', $searchingVals['status'] ?? '') == 'confirmed' ? 'selected' : '' }}> Confirmed</option>
+                                <option value="completed" {{ Request::old('status', $searchingVals['status'] ?? '') == 'completed' ? 'selected' : '' }}> Completed</option>
+                                <option value="uncompleted" {{ Request::old('status', $searchingVals['status'] ?? '') == 'uncompleted' ? 'selected' : '' }}> Uncompleted</option>
                             </select>
                         </div>
                     </div>
@@ -87,9 +89,10 @@
                                 <th scope="col"  style="width:10%">Que No</th>
                                 <th scope="col" style="width:15">Name</th>
                                 <th scope="col" style="width:15%">Contact No</th>
-                                <th scope="col" style="width:15%">Date & Time</th>
-                                <th scope="col" style="width:15%">Surgeon</th>
-                                <th scope="col" style="width:30%">Status</th>
+                                <th scope="col" style="width:10%">Date & Time</th>
+                                <th scope="col" style="width:10%">Surgeon</th>
+                                <th scope="col" style="width:10%">Center</th>
+                                <th scope="col" style="width:10%">Status</th>
                                 <th scope="col" style="width:10%">Action</th>
                                 </tr>
                             </thead>
@@ -99,11 +102,11 @@
                                     <th>{{ $row->appointment_no }}</td>
                                     <td>{{ $row->name ?? $row->patient->name ?? '-' }}</td>
                                     <td>{{ $row->contact_no ?? $row->patient->patient_contact_no ?? '-' }}</td>
-                                    <td>{{ $row->appointment_date }} {{ $row->appointment_time }}</td>
+                                    <td>{{ $row->appointment_date }} {{ date('h:i A', strtotime($row->appointment_time)) }}</td>
                                     <td>{{ $row->doctor->name }}</td>
+                                    <td>{{ $row->center->name }}</td>
                                     <td>
                                         <div class="status-grid">
-                                            <div class="col-6">
                                                 <form method="POST" action="{{ route('appointments.status', $row->id) }}">
                                                     @csrf
                                                     @method('PATCH')
@@ -112,8 +115,6 @@
                                                         Cancel
                                                     </button>
                                                 </form>
-                                            </div>
-                                            <div class="col-6">
                                                 <form method="POST" action="{{ route('appointments.status', $row->id) }}">
                                                     @csrf
                                                     @method('PATCH')
@@ -122,8 +123,6 @@
                                                         Confirmed
                                                     </button>
                                                 </form>
-                                            </div>
-                                            <div class="col-6">
                                                 <form method="POST" action="{{ route('appointments.status', $row->id) }}">
                                                     @csrf
                                                     @method('PATCH')
@@ -132,8 +131,6 @@
                                                         Pending
                                                     </button>
                                                 </form>
-                                            </div>
-                                            <div class="col-6">
                                                 <form method="POST" action="{{ route('appointments.status', $row->id) }}">
                                                     @csrf
                                                     @method('PATCH')
@@ -142,7 +139,6 @@
                                                         Completed
                                                     </button>
                                                 </form>
-                                            </div>
                                         </div>
                                     </td>
                                     <td>
@@ -200,6 +196,52 @@
             box-shadow: 0 0 8px rgba(0,0,0,0.25);
             font-weight: 600;
         }
+        
+        #searchForm .form-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        #searchForm .form-row .form-group {
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+            margin-bottom: 0;
+        }
+
+        #searchForm .form-row label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        #searchForm .form-row .form-control,
+        #searchForm .form-row .select2-container {
+            width: 100% !important;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Mobile and tablet - Two columns */
+        @media (max-width: 768px) {
+            #searchForm .form-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px 12px;
+            }
+        }
+
+        /* Very small screens - Keep two columns */
+        @media (max-width: 360px) {
+            #searchForm .form-row {
+                gap: 12px 8px;
+            }
+        }
+
+
     </style>
 @endpush
 
@@ -293,7 +335,7 @@
     /* Status buttons */
     .appointment-table .status-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        /* grid-template-columns: repeat(2, minmax(0, 1fr)); */
         gap: 6px;
         min-width: 130px;
     }

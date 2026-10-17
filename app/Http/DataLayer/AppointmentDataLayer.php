@@ -24,7 +24,6 @@ class AppointmentDataLayer
 
     public function insert($request)
     {
-        // dd($request->all());
         try {
             $dataObj = Appointment::create([
                 'patient_id' => $request->filled('patient_id') ? $request->patient_id : null,
@@ -32,7 +31,7 @@ class AppointmentDataLayer
                 'contact_no' => $request->filled('contact_no') ? $request->contact_no : null,
                 'doctor_id' => intval($request['doctor_id']),
                 'patient_type_id' => intval($request->input('patient_type_id')),
-                'center_id' => Auth::user()->center_id,
+                'center_id' => intval($request->input('center_id')),
                 'appointment_date' => Carbon::parse(trim($request->input('appointment_date'))),
                 'appointment_time' => !empty($request->input('appointment_time'))
                     ? Carbon::createFromFormat('H:i', trim($request->input('appointment_time')))->format('H:i:s')
@@ -40,7 +39,6 @@ class AppointmentDataLayer
                 'remark' => $request->input('remark', 'riception'),
                 'created_by' => Auth::user()->id,
             ]);
-            // dd($dataObj);
             return $dataObj;
         } catch (QueryException $exception) {
             return null;
@@ -85,15 +83,29 @@ class AppointmentDataLayer
             })
     
             ->when(!empty($constraints['center_id']), function ($q) use ($constraints) {
-                $q->where('center_id', Auth::user()->id);
+                $q->where('center_id', $constraints['center_id']);
             })
     
             ->when(!empty($constraints['appointment_date']), function ($q) use ($constraints) {
                 $q->whereDate('appointment_date', $constraints['appointment_date']);
             })
     
+            // ->when(!empty($constraints['status']), function ($q) use ($constraints) {
+            //     $q->where('status', $constraints['status']);
+            // })
+
+            // Status filtering
             ->when(!empty($constraints['status']), function ($q) use ($constraints) {
-                $q->where('status', $constraints['status']);
+    
+                if (strtolower($constraints['status']) === 'uncompleted') {
+    
+                    // Ignore completed and cancelled appointments
+                    $q->whereNotIn('status', ['completed', 'cancelled']);
+    
+                } else {
+                    $q->where('status', $constraints['status']);
+                }
+    
             })
     
             ->orderBy('appointment_no', 'ASC')
@@ -101,40 +113,40 @@ class AppointmentDataLayer
     }
 
     public function applyConstraint($query, $field, $constraint)
-{
-    $constraint = trim($constraint);
+    {
+        $constraint = trim($constraint);
 
-    if ($constraint === '' || $constraint === null) {
-        return;
+        if ($constraint === '' || $constraint === null) {
+            return;
+        }
+
+        switch ($field) {
+
+            case 'search_name':
+                $query->where('name', 'LIKE', '%' . $constraint . '%');
+                break;
+
+            case 'appointment_no':
+                $query->where('appointment_no', 'LIKE', '%' . $constraint . '%');
+                break;
+
+            case 'doctor_id':
+                $query->where('doctor_id', $constraint);
+                break;
+
+            case 'patient_type_id':
+                $query->where('patient_type_id', $constraint);
+                break;
+
+            case 'appointment_date':
+                $query->whereDate('appointment_date', $constraint);
+                break;
+
+            case 'status':
+                $query->where('status', $constraint);
+                break;
+        }
     }
-
-    switch ($field) {
-
-        case 'search_name':
-            $query->where('name', 'LIKE', '%' . $constraint . '%');
-            break;
-
-        case 'appointment_no':
-            $query->where('appointment_no', 'LIKE', '%' . $constraint . '%');
-            break;
-
-        case 'doctor_id':
-            $query->where('doctor_id', $constraint);
-            break;
-
-        case 'patient_type_id':
-            $query->where('patient_type_id', $constraint);
-            break;
-
-        case 'appointment_date':
-            $query->whereDate('appointment_date', $constraint);
-            break;
-
-        case 'status':
-            $query->where('status', $constraint);
-            break;
-    }
-}
 
     public function updateStatus($request, $id)
     {

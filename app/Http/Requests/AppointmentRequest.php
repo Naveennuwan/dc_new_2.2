@@ -28,6 +28,7 @@ class AppointmentRequest extends FormRequest
 
             'doctor_id' => 'required|exists:doctors,id',
             'patient_type_id' => 'nullable|exists:patient_types,id|required_without:patient_id',
+            'center_id' => 'nullable|exists:centers,id',
 
             'appointment_date' => 'required|date|after_or_equal:today',
             'appointment_time' => 'nullable',

@@ -60,6 +60,35 @@
         </div>
     </div>
 
+<div class="row">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="center_id" class="form-label">
+                Select Center
+            </label>
+
+            <select
+                class="js-example-basic-single form-control @error('center_id') is-invalid @enderror"
+                id="center_id"
+                name="center_id">
+                <option value="">Select Center</option>
+
+                @foreach ($centerObj as $center)
+                    <option
+                        value="{{ $center->id }}"
+                        {{ old('center_id', $dataObj->center_id ?? '') == $center->id ? 'selected' : '' }}>
+                        {{ $center->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            @error('center_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+</div>
+
     <div class="row">
         <div class="col-12">
         <div class="form-group row">
