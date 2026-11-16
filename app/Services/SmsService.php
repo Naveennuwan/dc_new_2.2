@@ -19,7 +19,7 @@ class SmsService
 
     public function sendSms($patientId, $message)
     {
-        //return;
+        return;
         $patient = Patient::find($patientId);
 
         if (!$patient) {
@@ -45,7 +45,7 @@ class SmsService
 
     public function sendAppointmentSms($sendTo, $message)
     {
-        //return;
+        return;
         if (empty($sendTo)) {
             return false;
         }

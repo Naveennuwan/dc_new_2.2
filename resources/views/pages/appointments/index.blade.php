@@ -102,7 +102,10 @@
                                     <th>{{ $row->appointment_no }}</td>
                                     <td>{{ $row->name ?? $row->patient->name ?? '-' }}</td>
                                     <td>{{ $row->contact_no ?? $row->patient->patient_contact_no ?? '-' }}</td>
-                                    <td>{{ $row->appointment_date }} {{ date('h:i A', strtotime($row->appointment_time)) }}</td>
+                                    <td>
+                                        {{ date('Y-m-d', strtotime($row->appointment_date)) }}
+                                        {{ date('h:i A', strtotime($row->appointment_time)) }}
+                                    </td>
                                     <td>{{ $row->doctor->name }}</td>
                                     <td>{{ $row->center->name }}</td>
                                     <td>

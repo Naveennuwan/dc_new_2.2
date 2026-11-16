@@ -76,6 +76,7 @@ class PatientDataLayer
                 'patient_center_id' => Auth::user()->center_id,
                 'parent_patient_id' => $request->input('parent_patient_id') ? $request->input('parent_patient_id') : null,
                 'isDisplay' => trim(intval($request->input('isDisplay'))) ? 1 : 0,
+                'isNewPrice' => trim(intval($request->input('isNewPrice'))) ? 1 : 0,
                 'created_by' => Auth::user()->id,
             ]);
             
@@ -120,6 +121,7 @@ class PatientDataLayer
             $dataObj->patient_type_id = trim($request->input('patient_type_id'));
             $dataObj->orthodontice_plan_id = trim($request->input('orthodontice_plan_id')) ? trim($request->input('orthodontice_plan_id')) : null;
             $dataObj->isDisplay = trim($request->input('isDisplay')) ? 1 : 0;
+            $dataObj->isNewPrice = trim($request->input('isNewPrice')) ? 1 : 0;
             $dataObj->parent_patient_id = $request->input('parent_patient_id') ?: null;
 
             $dataObj->updated_by =  Auth::user()->id;

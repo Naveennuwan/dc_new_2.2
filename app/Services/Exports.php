@@ -322,12 +322,6 @@ class Exports
         $pdf->Write(0, 'Address: ' .$patientDetails->patient_address, '', 0, 'L', true, 0, false, false, 0);
         $pdf->Write(0, 'Contact no.: ' .$patientDetails->patient_contact_no, '', 0, 'L', true, 0, false, false, 0);
 
-        // $treatments = SavedTreatment::where('saved_treatments.patient_id', $patientId)
-        //     ->where('saved_treatments.isPrint', '=', true)
-        //     ->join('template_headers', 'saved_treatments.template_id', '=', 'template_headers.id')
-        //     ->where('template_headers.template_category_id', '=', 3)
-        //     ->get();  
-
         $treatments = $savedTreatementDL->getPatientDrugTemplates($patientId) ?? [];
 
         // dd($treatments);
@@ -390,17 +384,17 @@ class Exports
         $pdf->SetFont('Helvetica', 'B', 9);
         $pdf->Ln(5);
 
-        $visits = PatientNextVisit::where('next_date', '>=', Carbon::now()->format('Y-m-d'))
+        $visits = Appointment::where('appointment_date', '>=', Carbon::now()->format('Y-m-d'))
         ->where('patient_id', '=', $patientId)
-        ->orderBy('next_date')
+        ->orderBy('appointment_date')
         ->first();
 
         if ($visits) {
-            $nextVisitTime = Carbon::parse($visits->time);
+            $nextVisitTime = Carbon::parse($visits->appointment_time);
             $formattedTime = $nextVisitTime->format('h:i A');
-            $pdf->Write(0, 'Next Visit: ' . $visits->next_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
+            $pdf->Write(0, 'Next Appointment: ' . $visits->appointment_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
         } else {
-            $pdf->Write(0, 'Next Visit: ', '', 0, 'L', true, 0, false, false, 5);
+            $pdf->Write(0, 'Next Appointment: ', '', 0, 'L', true, 0, false, false, 5);
         }
         
         // Add a horizontal ruler
@@ -908,9 +902,9 @@ class Exports
         if ($visits) {
             $nextVisitTime = Carbon::parse($visits->appointment_time);
             $formattedTime = $nextVisitTime->format('h:i A');
-            $pdf->Write(0, 'Next Visit: ' . $visits->appointment_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
+            $pdf->Write(0, 'Next Appointment: ' . $visits->appointment_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
         } else {
-            $pdf->Write(0, 'Next Visit: ', '', 0, 'L', true, 0, false, false, 5);
+            $pdf->Write(0, 'Next Appointment: ', '', 0, 'L', true, 0, false, false, 5);
         }
 
         $totalTemplatePayment = collect($treatments)->sum('payment');

@@ -12,16 +12,42 @@
                 @enderror
             </div>
         </div>
-    </div>
-    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-        <div class="form-group row">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <input type="checkbox" id="isDisplay" name="isDisplay" value="1"
-                        {{ Request::old('isDisplay', $dataObj['isDisplay'] ? '1' : '') == '1' ? 'checked' : '' }}>
-                </div>
+    </div><div class="col-12 col-md-6">
+        <div class="form-group d-flex align-items-center flex-wrap"
+             style="gap: 20px;">
+
+            {{-- Display New Price --}}
+            <div class="form-check d-flex align-items-center">
+                <input
+                    type="checkbox"
+                    class="form-check-input mt-0 me-2"
+                    id="isDisplay"
+                    name="isDisplay"
+                    value="1"
+                    {{ Request::old('isDisplay', $dataObj['isDisplay'] ?? 0) == 1 ? 'checked' : '' }}
+                >
+
+                <label for="isDisplay" class="form-check-label">
+                    Display New Price
+                </label>
             </div>
-            <label for="isDisplay" class="form-label col-3 col-sm-3 col-md-4">Display</label>
+
+            {{-- Is New Price --}}
+            <div class="form-check d-flex align-items-center">
+                <input
+                    type="checkbox"
+                    class="form-check-input mt-0 me-2"
+                    id="isNewPrice"
+                    name="isNewPrice"
+                    value="1"
+                    {{ Request::old('isNewPrice', $dataObj['isNewPrice'] ?? 0) == 1 ? 'checked' : '' }}
+                >
+
+                <label for="isNewPrice" class="form-check-label">
+                    Is New Price
+                </label>
+            </div>
+
         </div>
     </div>
 </div>

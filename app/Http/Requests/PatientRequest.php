@@ -47,6 +47,7 @@ class PatientRequest extends FormRequest
             'patient_gender' => 'required|string|max:300',
             'patient_age' => 'required|integer',
             'patient_type_id' => 'required|exists:patient_types,id',
+            'isNewPrice' => 'nullable|boolean',
             'orthodontice_plan_id' => [
                 'nullable',
                 'exists:orthodontic_plans,id',

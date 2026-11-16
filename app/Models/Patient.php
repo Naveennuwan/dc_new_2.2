@@ -33,6 +33,7 @@ class Patient extends Model
         'orthodontice_plan_id',
         'patient_center_id',
         'isDisplay',
+        'isNewPrice',
         'created_by',
         'updated_by',
     ];

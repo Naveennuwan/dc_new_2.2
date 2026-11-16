@@ -8,7 +8,7 @@
 
     } elseif ($levels->count() >= 2) {
 
-        if (empty($patientDetails) || empty($patientDetails->created_at)) {
+        if (empty($patientDetails) || empty($patientDetails->created_at) || ($patientDetails->isNewPrice == 1)) {
 
             $price = optional($levels->sortByDesc('effective_from')->first())->price ?? 0;
 
