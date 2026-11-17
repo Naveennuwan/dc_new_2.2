@@ -47,7 +47,6 @@ class AppointmentController extends Controller
     
     public function index()
     {
-
         $constraints = [
             'search_name'   => null,
             'appointment_date'   => null,

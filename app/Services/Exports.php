@@ -544,8 +544,6 @@ class Exports
             $pdf->setLineStyle(array('width' => 0));
             $pdf->Cell($nameWidth, 6, 'Treatement Name', 1, 0, 'C');
             $pdf->setLineStyle(array('width' => 0));
-            // $pdf->Cell($priceWidth, 6, 'Treatement Value', 1, 0, 'C');
-            // $pdf->setLineStyle(array('width' => 0));
             $pdf->Cell($paymenteWidth, 6, 'Payment', 1, 1, 'C');
 
             $pdf->SetFont('Helvetica', '', $font_size_08);
@@ -582,8 +580,6 @@ class Exports
                 $pdf->setLineStyle(array('width' => 0));
                 $pdf->Cell($nameWidth, 6, $Template->Template->name, 1, 0, 'C');
                 $pdf->setLineStyle(array('width' => 0));
-                // $pdf->Cell($priceWidth, 6, 'Rs. ' . number_format($price, 1), 1, 0, 'R');
-                // $pdf->setLineStyle(array('width' => 0));
                 $pdf->Cell($paymenteWidth, 6, 'Rs. ' . number_format($Template->payment, 1), 1, 1, 'R');
             }   
 
@@ -592,8 +588,6 @@ class Exports
             $pdf->setLineStyle(array('width' => 0));
             $pdf->Cell($nameWidth , 6, "Total", 1, 0, 'R');
             $pdf->setLineStyle(array('width' => 0));
-            // $pdf->Cell($priceWidth, 6, 'Rs. ' . $totalTreatement, 1, 0, 'R');
-            // $pdf->setLineStyle(array('width' => 0));
             $pdf->Cell($paymenteWidth, 6, 'Rs. ' . number_format(collect($treatments)->sum('payment'),2), 1, 1, 'R');
 
             // Table Footer..........................................................
@@ -602,18 +596,8 @@ class Exports
         }
 
         $totalTemplatePayment = collect($treatments)->sum('payment');
-
-        // $totalToPayWithDiscount = $totalTreatement - $totalDiscount;
+        
         $totalPayment = ($totalTemplatePayment + $totalAdvance - $totalDiscount);
-        // $duePayment = $totalToPayWithDiscount - $totalPayment;
-
-        // dd($patientDetails);
-        //     'Disounts: '. 'Rs. ' .  number_format($totalDiscount, 2),
-        //     'Total Treatements Value: '. 'Rs. ' .  number_format($totalTreatement, 2),
-        //     'Total To Pay With Discount: '. 'Rs. ' . number_format($totalToPayWithDiscount, 2),
-        //     'Total Payments : '. 'Rs. ' . number_format($totalPayment, 2),
-        //     'Due Payment : '. 'Rs. ' . number_format($duePayment, 2)
-        // );
 
         $pdf->Ln(2);
         $pdf->SetFont('Helvetica', '', $font_size_10);
@@ -628,6 +612,22 @@ class Exports
             $pdf->Write(0, 'Total To Pay With Discount: '. 'Rs. ' . number_format($patientDetails->orthodonticPlanType->price - $totalDiscount, 2), '', 0, 'L', true, 0, false, false, 0);
             $pdf->Write(0, 'Total Payment: '. 'Rs. ' . number_format($totalTemplatePayment + $totalAdvance, 2), '', 0, 'L', true, 0, false, false, 0);
             $pdf->Write(0, 'Due Payment : '. 'Rs. ' . number_format(($patientDetails->orthodonticPlanType->price - $totalDiscount) - ($totalTemplatePayment + $totalAdvance), 2), '', 0, 'L', true, 0, false, false, 0);
+        }
+
+        $pdf->SetFont('Helvetica', 'B', 9);
+        $pdf->Ln(2);
+
+        $visits = Appointment::where('appointment_date', '>=', Carbon::now()->format('Y-m-d'))
+        ->where('patient_id', '=', $patientId)
+        ->orderBy('appointment_date')
+        ->first();
+
+        if ($visits) {
+            $nextVisitTime = Carbon::parse($visits->appointment_time);
+            $formattedTime = $nextVisitTime->format('h:i A');
+            $pdf->Write(0, 'Next Appointment: ' . $visits->appointment_date . ' at ' . $formattedTime, '', 0, 'L', true, 0, false, false, 5);
+        } else {
+            $pdf->Write(0, 'Next Appointment: ', '', 0, 'L', true, 0, false, false, 5);
         }
         
         $pdf->Ln(2);

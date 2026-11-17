@@ -31,7 +31,7 @@ class AppointmentDataLayer
                 'contact_no' => $request->filled('contact_no') ? $request->contact_no : null,
                 'doctor_id' => intval($request['doctor_id']),
                 'patient_type_id' => intval($request->input('patient_type_id')),
-                'center_id' => intval($request->input('center_id')),
+                'center_id' => Auth::user()->center_id,
                 'appointment_date' => Carbon::parse(trim($request->input('appointment_date'))),
                 'appointment_time' => !empty($request->input('appointment_time'))
                     ? Carbon::createFromFormat('H:i', trim($request->input('appointment_time')))->format('H:i:s')
